@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "projectName": "Uniformly loaded beam",
+  "length": 6,
+  "E": 200,
+  "I": 8000000,
+  "units": {
+    "length": "m",
+    "force": "kN",
+    "modulus": "GPa",
+    "inertia": "mm4"
+  },
+  "supports": [
+    {
+      "id": "support-a",
+      "type": "pin",
+      "x": 0
+    },
+    {
+      "id": "support-b",
+      "type": "roller",
+      "x": 6
+    }
+  ],
+  "loads": [
+    {
+      "id": "udl",
+      "type": "udl",
+      "magnitude": 10,
+      "start": 0,
+      "end": 6
+    }
+  ],
+  "nodes": [],
+  "sections": [],
+  "evaluationPoints": [
+    0,
+    1.5,
+    3,
+    4.5,
+    6
+  ]
+}

@@ -1,0 +1,8 @@
+.venv-arch/
+__pycache__/
+**/.venv*/
+**/node_modules/
+**/dist/
+**/output/
+**/.cache/
+**/.DS_Store

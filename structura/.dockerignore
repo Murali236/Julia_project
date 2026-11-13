@@ -1,0 +1,9 @@
+node_modules
+frontend/node_modules
+frontend/dist
+.git
+.env*
+.venv-qa
+output
+tmp
+test-results

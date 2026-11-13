@@ -1,0 +1,12 @@
+node_modules/
+frontend/dist/
+.env
+.env.*
+!.env.example
+frontend/.env.local
+*.tsbuildinfo
+output/
+tmp/
+.DS_Store
+test-results/
+.venv-qa/

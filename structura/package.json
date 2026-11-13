@@ -1,0 +1,25 @@
+{
+  "name": "structura",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:frontend": "npm run dev -w frontend",
+    "dev:backend": "julia --project=backend backend/src/Server.jl",
+    "setup:julia": "julia --project=backend -e 'using Pkg; Pkg.instantiate()'",
+    "build": "npm run build -w frontend",
+    "test": "npm run test -w frontend",
+    "test:julia": "julia --project=backend backend/test/runtests.jl",
+    "test:api": "node --test tests/api.test.mjs",
+    "test:reports": "node --test tests/reports.test.mjs",
+    "test:startup": "node --test tests/dev-startup.test.mjs",
+    "test:limits": "node --test tests/limits.test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.51.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "type": "buckling",
+  "projectName": "Pinned column \u00b7 elastic stability",
+  "section": "rectangle",
+  "b": 60,
+  "h": 100,
+  "tw": 6,
+  "tf": 10,
+  "diameter": 80,
+  "length": 3,
+  "E": 200,
+  "yieldStress": 250,
+  "support": "pinned_pinned",
+  "axis": "weak",
+  "elements": 24,
+  "material": "elastic",
+  "hardeningRatio": 0.01,
+  "exponent": 6
+}

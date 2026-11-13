@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "type": "arch",
+  "projectName": "Three-hinged parabolic arch",
+  "geometry": "parabolic",
+  "length": 20,
+  "rise": 4,
+  "support": "three_hinged",
+  "hinge": 10,
+  "E": 200,
+  "A": 12000,
+  "I": 200000000.0,
+  "axial": true,
+  "loads": [
+    {
+      "id": "udl-1",
+      "type": "udl",
+      "start": 0,
+      "end": 20,
+      "qx": 0,
+      "qy": -10
+    }
+  ]
+}

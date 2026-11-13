@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Structura BeamModel v1",
+  "description": "Portable frontend model. Cross-field geometry, section coverage, finiteness, numerical range, and stability are checked by the application and Julia solver.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "projectName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "length": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "E": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "I": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "length": {
+          "enum": [
+            "m",
+            "mm"
+          ]
+        },
+        "force": {
+          "enum": [
+            "kN",
+            "N"
+          ]
+        },
+        "modulus": {
+          "enum": [
+            "GPa",
+            "Pa"
+          ]
+        },
+        "inertia": {
+          "enum": [
+            "mm4",
+            "m4"
+          ]
+        }
+      },
+      "required": [
+        "length",
+        "force",
+        "modulus",
+        "inertia"
+      ]
+    },
+    "supports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "type": {
+            "enum": [
+              "pin",
+              "roller",
+              "fixed",
+              "spring"
+            ]
+          },
+          "x": {
+            "type": "number"
+          },
+          "stiffness": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "settlement": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "x"
+        ]
+      },
+      "maxItems": 16,
+      "minItems": 1
+    },
+    "loads": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "type": {
+                "const": "point"
+              },
+              "magnitude": {
+                "type": "number"
+              },
+              "x": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "magnitude",
+              "x"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "type": {
+                "const": "moment"
+              },
+              "magnitude": {
+                "type": "number"
+              },
+              "x": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "magnitude",
+              "x"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "type": {
+                "const": "udl"
+              },
+              "magnitude": {
+                "type": "number"
+              },
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "magnitude",
+              "start",
+              "end"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "type": {
+                "const": "uvl"
+              },
+              "magnitude": {
+                "type": "number"
+              },
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              },
+              "endMagnitude": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "id",
+              "type",
+              "magnitude",
+              "start",
+              "end",
+              "endMagnitude"
+            ]
+          }
+        ]
+      },
+      "maxItems": 32
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 32
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "start": {
+            "type": "number"
+          },
+          "end": {
+            "type": "number"
+          },
+          "E": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "I": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "E",
+          "I"
+        ]
+      },
+      "maxItems": 16
+    },
+    "evaluationPoints": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 50
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "projectName",
+    "length",
+    "E",
+    "I",
+    "units",
+    "supports",
+    "loads",
+    "nodes",
+    "sections",
+    "evaluationPoints"
+  ]
+}

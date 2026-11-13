@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "type": "shear-centre",
+  "projectName": "Channel \u00b7 combined shear",
+  "section": "channel",
+  "b": 75,
+  "h": 200,
+  "tw": 6,
+  "tf": 12,
+  "Vx": 2500,
+  "Vy": 10000
+}

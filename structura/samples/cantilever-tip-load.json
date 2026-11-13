@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "projectName": "Cantilever tip load",
+  "length": 6,
+  "E": 200,
+  "I": 8000000,
+  "units": {
+    "length": "m",
+    "force": "kN",
+    "modulus": "GPa",
+    "inertia": "mm4"
+  },
+  "supports": [
+    {
+      "id": "fixed",
+      "type": "fixed",
+      "x": 0
+    }
+  ],
+  "loads": [
+    {
+      "id": "load-1",
+      "type": "point",
+      "magnitude": 10,
+      "x": 6
+    }
+  ],
+  "nodes": [],
+  "sections": [],
+  "evaluationPoints": [
+    0,
+    1.5,
+    3,
+    4.5,
+    6
+  ]
+}

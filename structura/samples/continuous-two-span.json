@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "projectName": "Two-span continuous beam",
+  "length": 12,
+  "E": 200,
+  "I": 8000000,
+  "units": {
+    "length": "m",
+    "force": "kN",
+    "modulus": "GPa",
+    "inertia": "mm4"
+  },
+  "supports": [
+    {
+      "id": "support-a",
+      "type": "pin",
+      "x": 0
+    },
+    {
+      "id": "support-b",
+      "type": "roller",
+      "x": 6
+    },
+    {
+      "id": "support-c",
+      "type": "roller",
+      "x": 12
+    }
+  ],
+  "loads": [
+    {
+      "id": "udl",
+      "type": "udl",
+      "magnitude": 10,
+      "start": 0,
+      "end": 12
+    }
+  ],
+  "nodes": [],
+  "sections": [],
+  "evaluationPoints": [
+    0,
+    3,
+    6,
+    9,
+    12
+  ]
+}
