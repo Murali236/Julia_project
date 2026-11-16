@@ -142,6 +142,9 @@ Docker files are supplied for reproducibility. See validation notes for whether 
 
 ## Deployment and data lifecycle
 
+For a single Render web service that serves both the website and Julia API,
+see [Render deployment](docs/RENDER.md).
+
 The frontend is static after `npm run build`; its output is `frontend/dist`. The API requires a Julia-capable server/container with Node and Chromium for reports. A static host or Cloudflare Worker cannot execute this Julia backend. Deploy both services together using the supplied nginx/container arrangement or connect the frontend to a separately hosted HTTPS API.
 
 The current API is intended for a trusted local deployment: it has no user accounts. Before exposing it publicly, place it behind authentication, TLS, rate limits, and per-user result isolation. Local project inputs remain in the browser, while server results are held in memory for up to 24 hours, at most 100 records. Restarting the API clears the result cache. Re-run an imported/reopened model to produce a new report.

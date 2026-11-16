@@ -1,12 +1,17 @@
 using HTTP, JSON3, Dates
 const ROOT=normpath(joinpath(@__DIR__,"../.."))
-const ORIGINS=split(get(ENV,"FRONTEND_ORIGINS","http://localhost:5173,http://127.0.0.1:5173"),',')
+const ORIGINS=String.(split(get(ENV,"FRONTEND_ORIGINS","http://localhost:5173,http://127.0.0.1:5173"),','))
+# Render provides the public same-origin URL for the bundled frontend.
+if !isempty(get(ENV,"RENDER_EXTERNAL_URL",""))
+    push!(ORIGINS,rstrip(ENV["RENDER_EXTERNAL_URL"],'/'))
+end
 const MAX_BODY=parse(Int,get(ENV,"MAX_BODY_BYTES","262144"))
 const MAX_JOBS=parse(Int,get(ENV,"MAX_CONCURRENT_JOBS","2"))
 const ACTIVE=Ref(0); const JOB_LOCK=ReentrantLock(); const CACHE_LOCK=ReentrantLock()
 const CACHE=Dict{String,Tuple{Float64,Any}}()
 json(status,data)=HTTP.Response(status,["Content-Type"=>"application/json"],JSON3.write(data))
 failure(status,message)=json(status,Dict("status"=>"failed","error"=>Dict("message"=>message)))
+include("Static.jl")
 function limited_job(f)
     accepted=lock(JOB_LOCK) do
         ACTIVE[]>=MAX_JOBS && return false
@@ -32,6 +37,9 @@ function route(req)
     if req.method=="GET" && path=="/api/health"
         return json(200,(status="ok",engine="Julia",version=string(VERSION),softwareVersion="0.1.0",modules=["beam","deflection","shear-centre","buckling","arch"]))
     end
+    if req.method=="GET" && path!="/api" && !startswith(path,"/api/")
+        return static_response(path)
+    end
     req.method=="POST" || return failure(404,"Endpoint not found.")
     startswith(HTTP.header(req,"Content-Type",""),"application/json") || return failure(415,"Use application/json.")
     body=try JSON3.read(req.body,Dict{String,Any}) catch; return failure(400,"Malformed JSON object."); end
@@ -42,7 +50,7 @@ function route(req)
             mktempdir() do dir
                 source=joinpath(dir,"input.json"); destination=joinpath(dir,"result.json")
                 write(source,JSON3.write(body))
-                cmd=`$(Base.julia_cmd()) --startup-file=no --threads=1 --project=$(joinpath(ROOT,"backend")) $(joinpath(@__DIR__,"Worker.jl")) $kind $source $destination`
+                cmd=`$(Base.julia_cmd()) --startup-file=no --threads=1 --heap-size-hint=128M --project=$(joinpath(ROOT,"backend")) $(joinpath(@__DIR__,"Worker.jl")) $kind $source $destination`
                 ok=run_bounded(cmd,parse(Float64,get(ENV,"ANALYSIS_TIMEOUT_SECONDS","45")))
                 ok && isfile(destination) || return failure(504,"Analysis timed out or the worker stopped. Simplify the model and retry.")
                 envelope=JSON3.read(read(destination,String),Dict{String,Any})
@@ -122,5 +130,8 @@ function streamhandler(stream)
     end
     HTTP.setstatus(stream,response.status)
     for h in response.headers; HTTP.setheader(stream,h); end
+    # Explicit framing also completes early rejection responses when an
+    # oversized request body is deliberately left unread and the socket closes.
+    HTTP.setheader(stream,"Content-Length"=>string(length(response.body)))
     HTTP.startwrite(stream); write(stream,response.body)
 end
